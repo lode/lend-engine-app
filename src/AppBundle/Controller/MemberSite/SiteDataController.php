@@ -106,7 +106,11 @@ class SiteDataController extends Controller
             }
 
             $day = new \DateTime();
-            $day->modify("-28 days");
+            // allow admins to correct loans to start in the past
+            $user = $this->getUser();
+            if ($user->hasRole("ROLE_ADMIN")) {
+                $day->modify("-28 days");
+            }
             // $dateTo is the end of the visible calendar but we need more slots for auto-setting loan end date
             $to  = new \DateTime($dateTo);
             $to->modify("+28 days");
